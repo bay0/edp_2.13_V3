@@ -1,11 +1,9 @@
-# epaper
+# Waveshare 2.13 V3 Golang driver
 
-E-paper waveshare 2.13 V3 Golang driver
+Working E-paper waveshare 2.13 V3 Golang driver
 
 Due to the change of the chipset used in the waveshare 2.13 epd, the old v2 driver is not compatible.
 This implementation of the python drivers tries to mimic into V3 version to make it work
-
-Right now does not work, is just a WIP
 
 - Original
   driver :  [here](https://github.com/waveshare/e-Paper/blob/master/RaspberryPi_JetsonNano/python/lib/waveshare_epd/epd2in13_V3.py)
@@ -13,7 +11,7 @@ Right now does not work, is just a WIP
 
 ## How can I try this driver?
 
-If you are wandering whether your E-paper is compatible you can try this snippet of code, **though is not yet working**....
+If you are wandering whether your E-paper is compatible you can try this snippet of code.
 
 ```
 func main() {
