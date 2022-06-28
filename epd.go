@@ -159,15 +159,17 @@ var lutFullUpdate = []byte{
 // Init starts the epd
 func (e *Epd) Init() {
 	e.reset()
+
 	e.readBusy()
 	e.executeCommandAndLog(0x12, "SOFT_RESET", nil)
 	e.readBusy()
-	e.executeCommandAndLog(0x01, "DRIVER_OUTPUT_CONTROL", []byte{0xF9, 0x0, 0x0})
+
+	e.executeCommandAndLog(0x01, "DRIVER_OUTPUT_CONTROL", []byte{0xF9, 0x00, 0x00})
 	e.executeCommandAndLog(0x11, "DATA_ENTRY_MODE", []byte{0x03})
 
 	//Equivalent to Set Window in python driver
 	e.executeCommandAndLog(0x44, "SET_X-RAM_START_END_POSITION - Second data byte 0x0C-->(15+1)*8=128", []byte{0x0, 0x0F})
-	e.executeCommandAndLog(0x45, "SET_X-RAM_START_END_POSITION - First data byte 0xF9-->(249+1)=250", []byte{0xF9, 0x0, 0x0, 0x0})
+	e.executeCommandAndLog(0x45, "SET_X-RAM_START_END_POSITION - First data byte 0xF9-->(249+1)=250", []byte{0x0, 0x0, 0xF9, 0x0})
 	e.setCursor(0, 0)
 
 	e.executeCommandAndLog(0x3C, "BorderWavefrom", []byte{0x05})
