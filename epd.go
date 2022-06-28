@@ -168,8 +168,9 @@ func (e *Epd) Init() {
 	e.executeCommandAndLog(0x11, "DATA_ENTRY_MODE", []byte{0x03})
 
 	//Equivalent to Set Window in python driver
-	e.executeCommandAndLog(0x44, "SET_X-RAM_START_END_POSITION - Second data byte 0x0C-->(15+1)*8=128", []byte{0x0, 0x0F})
-	e.executeCommandAndLog(0x45, "SET_X-RAM_START_END_POSITION - First data byte 0xF9-->(249+1)=250", []byte{0x0, 0x0, 0xF9, 0x0})
+	e.setWindow(0, 0, e.Width-1, e.Height-1)
+	//e.executeCommandAndLog(0x44, "SET_X-RAM_START_END_POSITION - Second data byte 0x0C-->(15+1)*8=128", []byte{0x0, 0x0F})
+	//e.executeCommandAndLog(0x45, "SET_X-RAM_START_END_POSITION - First data byte 0xF9-->(249+1)=250", []byte{0x0, 0x0, 0xF9, 0x0})
 	e.setCursor(0, 0)
 
 	e.executeCommandAndLog(0x3C, "BorderWavefrom", []byte{0x05})
@@ -220,7 +221,7 @@ func (e *Epd) GetBuffer(image *image.RGBA) []byte {
 		lineWidth++
 	}
 
-	size := (lineWidth * e.Height)
+	size := lineWidth * e.Height
 	data := make([]byte, size)
 	for i := 0; i < len(data); i++ {
 		data[i] = 0xFF
@@ -289,26 +290,14 @@ func (e *Epd) setLut(lut []byte) {
 	e.executeCommandAndLog(0x2c, "vcom", []byte{lut[158]})
 }
 
-func (e *Epd) setCursor(x byte, y byte) {
-	e.executeCommandAndLog(0x4E, "SET_RAM_X_ADDRESS_COUNTER", []byte{x & 0xFF})
-	e.executeCommandAndLog(0x4F, "SET_RAM_Y_ADDRESS_COUNTER", []byte{y & 0xFF, (y >> 8) & 0xFF})
+func (e *Epd) setCursor(x uint8, y uint8) {
+	e.executeCommandAndLog(0x4E, "SET_RAM_X_ADDRESS_COUNTER", []byte{byte(x & 0xFF)})
+	e.executeCommandAndLog(0x4F, "SET_RAM_Y_ADDRESS_COUNTER", []byte{byte(y & 0xFF), byte((y >> 8) & 0xFF)})
 
 }
 
-// ShiftLeft performs a left bit shift operation on the provided bytes.
-// If the bits count is negative, a right bit shift is performed.
-func ShiftLeft(data []byte, bits int) {
-	n := len(data)
-	if bits < 0 {
-		bits = -bits
-		for i := n - 1; i > 0; i-- {
-			data[i] = data[i]>>bits | data[i-1]<<(8-bits)
-		}
-		data[0] >>= bits
-	} else {
-		for i := 0; i < n-1; i++ {
-			data[i] = data[i]<<bits | data[i+1]>>(8-bits)
-		}
-		data[n-1] <<= bits
-	}
+func (e *Epd) setWindow(xStart, yStart byte, xEnd int, yEnd int) {
+	// x point must be the multiple of 8 or the last 3 bits will be ignored
+	e.executeCommandAndLog(0x44, "ET_RAM_X_ADDRESS_START_END_POSITION", []byte{byte((xStart >> 3) & 0xFF), byte((xEnd >> 3) & 0xFF)})
+	e.executeCommandAndLog(0x45, "SET_RAM_Y_ADDRESS_START_END_POSITION", []byte{byte(yStart & 0xFF), byte((yStart >> 8) & 0xFF), byte(yEnd & 0xFF), byte((yEnd >> 8) & 0xFF)})
 }
