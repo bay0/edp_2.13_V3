@@ -239,10 +239,7 @@ func (e *Epd) GetBuffer(image *image.RGBA) []byte {
 				}
 			}
 		}
-		return data
-	}
-
-	if imageWidth == e.Height && imageHeight == e.Width {
+	} else if imageWidth == e.Height && imageHeight == e.Width {
 		for y := 0; y < imageHeight; y++ {
 			for x := 0; x < imageWidth; x++ {
 				if isBlack(image, x, y) {
@@ -252,7 +249,6 @@ func (e *Epd) GetBuffer(image *image.RGBA) []byte {
 				}
 			}
 		}
-		return data
 	}
 	fmt.Printf("Can't convert image expected %d %d but having %d %d", lineWidth, e.Height, imageWidth, imageHeight)
 	return data
