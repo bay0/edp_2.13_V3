@@ -296,8 +296,8 @@ func (e *Epd) setCursor(x uint8, y uint8) {
 
 }
 
-func (e *Epd) setWindow(xStart, yStart byte, xEnd int, yEnd int) {
+func (e *Epd) setWindow(xStart, yStart int, xEnd int, yEnd int) {
 	// x point must be the multiple of 8 or the last 3 bits will be ignored
-	e.executeCommandAndLog(0x44, "ET_RAM_X_ADDRESS_START_END_POSITION", []byte{(xStart >> 3) & 0xFF, byte((xEnd >> 3) & 0xFF)})
-	e.executeCommandAndLog(0x45, "SET_RAM_Y_ADDRESS_START_END_POSITION", []byte{yStart & 0xFF, (yStart >> 8) & 0xFF, byte(yEnd & 0xFF), byte((yEnd >> 8) & 0xFF)})
+	e.executeCommandAndLog(0x44, "ET_RAM_X_ADDRESS_START_END_POSITION", []byte{byte((xStart >> 3) & 0xFF), byte((xEnd >> 3) & 0xFF)})
+	e.executeCommandAndLog(0x45, "SET_RAM_Y_ADDRESS_START_END_POSITION", []byte{byte(yStart & 0xFF), byte((yStart >> 8) & 0xFF), byte(yEnd & 0xFF), byte((yEnd >> 8) & 0xFF)})
 }
