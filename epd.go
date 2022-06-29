@@ -171,7 +171,7 @@ func (e *Epd) Init() {
 	e.setWindow(0, 0, e.Width-1, e.Height-1)
 	//e.executeCommandAndLog(0x44, "SET_X-RAM_START_END_POSITION - Second data byte 0x0C-->(15+1)*8=128", []byte{0x0, 0x0F})
 	//e.executeCommandAndLog(0x45, "SET_X-RAM_START_END_POSITION - First data byte 0xF9-->(249+1)=250", []byte{0x0, 0x0, 0xF9, 0x0})
-	e.setCursor(e.Width-1, e.Height-1)
+	e.setCursor(0, 0)
 
 	e.executeCommandAndLog(0x3C, "BorderWavefrom", []byte{0x05})
 	e.executeCommandAndLog(0x21, "Display update control", []byte{0x00, 0x80})
