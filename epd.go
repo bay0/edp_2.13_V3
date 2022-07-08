@@ -247,8 +247,9 @@ func (e *Epd) GetBuffer(image *image.RGBA) []byte {
 			for x := 0; x < imageWidth; x++ {
 				if isBlack(image, x, y) {
 					posx := y
-					posy := imageWidth - (e.Height - x - 1) - 1
-					data[posx/8+posy*lineWidth] &= ^(0x80 >> (y % 8))
+					posy := e.Height - x - 1
+					//data[posx/8+posy*lineWidth] &= ^(0x80 >> (y % 8))
+					data[((posx + posy*e.Width) / 8)] &= ^(0x80 >> (y % 8))
 				}
 			}
 		}
